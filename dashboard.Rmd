@@ -21,7 +21,7 @@ data("rest_inspec")
 
 nyc_inspect = 
   rest_inspec %>% 
-  select(boro, cuisine_description, dba, score, violation_description, grade) %>% 
+  select(boro, cuisine_description, dba, score, violation_description, grade, building) %>% 
   filter(grade %in% c("A", "B", "C"))
 ```
 
@@ -41,12 +41,33 @@ nyc_inspect %>%
   layout(title = "Restaurants with score between 20 and 50",
          xaxis = list(title = "Cuisine"),
          yaxis = list(title = "Restaurant"))
+
+nyc_inspect %>% 
+  filter(score %in% 20:50) %>% 
+  mutate(text_label = str_c("Score: ", score)) %>%
+  plot_ly(x = ~building, y = ~score, 
+          type = "scatter", mode = "markers", text = ~text_label,
+          color = ~score, colors = "viridis") %>% 
+  layout(title = "Restaurants with score between 20 and 50",
+         xaxis = list(title = "Cuisine"),
+         yaxis = list(title = "Restaurant"))
+```
+
+### Chart B
+
+```{r}
+nyc_inspect %>% 
+  mutate(text_label = str_c("Restaurant: ", dba, "\nScore: ", score)) %>%
+  plot_ly(x = ~score, type = "histogram", color = "orange", alpha = .8, text = ~text_label) %>% 
+  layout(title = "Histogram of inspection scores of NY restaurants",
+         xaxis = list(title = "Score"),
+         yaxis = list(title = "Count"))
 ```
 
 Column {data-width=400}
 -----------------------------------------------------------------------
 
-### Chart B
+### Chart C
 
 ```{r}
 nyc_inspect %>% 
@@ -62,7 +83,7 @@ nyc_inspect %>%
     yaxis = list(title = "Inspection score"))
 ```
 
-### Chart C
+### Chart D
 
 ```{r}
 nyc_inspect %>% 
