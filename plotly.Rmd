@@ -32,20 +32,16 @@ nyc_inspect =
 ## Scatterplot
 
 ```{r}
-library(httr)
-api_url = "https://data.cityofnewyork.us/resource/43nn-pn8j.csv"
-rest_inspection = 
-  GET(api_url, query = list("$limit" = 50000)) %>% 
-  content("parsed") 
-
-rest_inspection %>% 
-  filter(boro == "Manhattan", score %in% 20:80) %>% 
-  drop_na(score) %>% 
-  mutate(text_label = str_c("Restaurant: ", dba, "\nCuisine: ", cuisine_description, "\nScore: ", score)) %>% 
-  plot_ly(
-    x = ~longitude, y = ~latitude, color = ~score, text = ~text_label, 
-    alpha = .5, type = "scatter", mode = "markers") %>% 
-  layout(title = "Restaurants in Manhattan with inspection score greater than or equal to 20")
+nyc_inspect %>% 
+  filter(cuisine_description == c("Korean", "Thai", "Chinese", "Vietnamese", "Japanese", "Russian", "Italy", "French", "American", "Mexican")) %>% 
+  filter(score %in% 20:50) %>% 
+  mutate(text_label = str_c("Score: ", score)) %>%
+  plot_ly(x = ~cuisine_description, y = ~dba, 
+          type = "scatter", mode = "markers", text = ~text_label,
+          color = ~score, colors = "viridis") %>% 
+  layout(title = "Restaurants with score between 20 and 50",
+         xaxis = list(title = "Cuisine"),
+         yaxis = list(title = "Restaurant"))
 ```
 
 ## Boxplot

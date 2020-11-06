@@ -31,7 +31,16 @@ Column {data-width=600}
 ### Chart A
 
 ```{r}
-
+nyc_inspect %>% 
+  filter(cuisine_description == c("Korean", "Thai", "Chinese", "Vietnamese", "Japanese", "Russian", "Italy", "French", "American", "Mexican")) %>% 
+  filter(score %in% 20:50) %>% 
+  mutate(text_label = str_c("Score: ", score)) %>%
+  plot_ly(x = ~cuisine_description, y = ~dba, 
+          type = "scatter", mode = "markers", text = ~text_label,
+          color = ~score, colors = "viridis") %>% 
+  layout(title = "Restaurants with score between 20 and 50",
+         xaxis = list(title = "Cuisine"),
+         yaxis = list(title = "Restaurant"))
 ```
 
 Column {data-width=400}
