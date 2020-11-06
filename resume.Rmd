@@ -1,0 +1,13 @@
+---
+title: "Resume"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+I received a BS in Biochemistry from the the University of Washington in 2017 and am doing my MS in Biostatistics at Columbia.  
+
+Here is my resume
+
+<img src = "image/resume.jpg">

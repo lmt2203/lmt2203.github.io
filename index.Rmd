@@ -1,0 +1,23 @@
+---
+title: "Hi, my name is Linh!"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Welcome to my website
+
+I am a first-year MS Biostatistics student at the Columbia University, New York. I am originally from Vietnam but moved to the Seattle, WA 7 years ago for my bachelor degree and have been here ever since. 
+
+This is my best friend, Thomas. He loves hiking, stuffed animals and meeting other humans.
+
+<img src = "image/thomas.jpg" style = "width:75%">
+
+## Link to page within the site
+
+  * [Resume](resume.html)
+  * [Plotly](plotly.html)
+  * [Dashboard](dashboard.html)
+
+

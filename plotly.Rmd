@@ -1,0 +1,81 @@
+---
+title: "Plotly"
+output: 
+  html_document:
+    toc: true
+    toc_float: true
+---
+
+# Loading data
+
+I'm gonna look at the NYC restaurant inspection data, specifically Asian restaurants in Manhattan. 
+
+```{r}
+library(tidyverse)
+library(p8105.datasets)
+library(plotly)
+```
+
+
+```{r}
+nyc_inspect = 
+  read_csv("data/nyc_inspec.csv") %>% 
+  select(dba, boro, cuisine_description, violation_code, violation_description, score, grade, latitude, longitude)  %>% 
+  filter(boro != "0", grade %in% c("A", "B", "C"))
+```
+
+# Plotly plots
+
+## Scatterplot
+
+```{r}
+nyc_inspect %>% 
+  filter(
+    boro == "Manhattan", score >= 20
+    ) %>% 
+  drop_na(score) %>% 
+  mutate(text_label = str_c("Restaurant: ", dba, "\nCuisine: ", cuisine_description, "\nScore: ", score)) %>% 
+  plot_ly(
+    x = ~latitude, y = ~longitude, color = ~score, text = ~text_label, 
+    alpha = .5, type = "scatter", mode = "markers") %>% 
+  layout(title = "Restaurants in Manhattan with inspection score greater than or equal to 20")
+```
+
+## Boxplot
+
+```{r}
+nyc_inspect %>% 
+  mutate(boro = fct_reorder(boro, score)) %>% 
+  mutate(text_label = str_c("Cuisine: ", cuisine_description, "\nScore: ", score)) %>% 
+  plot_ly(y = ~score, x = ~boro, 
+          color = ~boro, colors = "viridis",
+          text = ~text_label,
+          type = "box") %>% 
+  layout(
+    title = "Scores of restaurants in NY grouped by borough", 
+    scene = list(
+      xaxis = list(title = "Borough"),
+      yaxis = list(title = "Inspection score")
+  ))
+```
+
+## Bar plot
+
+```{r}
+nyc_inspect %>% 
+  filter(
+    boro == "Manhattan", 
+    cuisine_description == c("Korean", "Thai", "French", "Pizza", "Italian", "Peruvian", "Geek", "Chinese", "Vietnamese", "Japanese", "Bakery", "Russian", "German", "Indian", "Delicatessen", "Café/Coffee/Tea", "Mexican", "American")) %>% 
+  count(cuisine_description) %>% 
+  mutate(cuisine_description = fct_reorder(cuisine_description, n)) %>% 
+  plot_ly(x = ~cuisine_description, y = ~n, color = ~cuisine_description,
+          type = "bar", colors = "viridis") %>% 
+  layout(
+    title = "Count of restaurants in Manhattan by cuisine",
+    scene = list(
+      xaxis = list(title = "Cuisine"),
+      yaxis = list(title = "Count")
+    )
+  )
+```
+
